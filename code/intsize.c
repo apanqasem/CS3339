@@ -38,3 +38,6 @@ int main() {
  *  5. Write down what you expect from each line of output. 
  *
  */
+  return 0;
+}
+
