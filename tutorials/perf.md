@@ -1,19 +1,25 @@
 ## Performance evaluation and program execution demo
 
-### 1. Overview 
+### Description 
 
 A simple introduction to command-line program execution and performance evaluation. Covers the following
 
    * basic Linux commands 
    * command-line compilation with `gcc`
    * performance profiling with `perf`. 
-   * hardware performance counters and performance events
-   * relative performance
+
+### Outline 
+
+* [Environment Set-up](#env)
+* [Obtaining code samples](#git)
+* [Building and executing](#gcc)
+* [Measuring performance](#time)
+* [Exploring a new architecture (POWER8)](#capi) 
+* [Getting performance insight via `perf`](#perf)
 
 
-### 2. Environment Set-up
+### <a name="env"></a>Environment Set-up
    
-
 ##### (i) Login to remote linux system 
 
 Log in to one of the CS servers using ssh
@@ -30,6 +36,11 @@ List files in current directory
 ls
 ```
 
+Almost all Linux commands will accept a set of options that can be used to control its
+behavior. Options are passed at the command-line using a `-` followed by a single character. The
+character corresponds to the particular option that you want enforced. Here are few useful flags for
+the `ls` command.
+ 
 List files in current directory including hidden files 
 ```
 ls -a
@@ -92,7 +103,7 @@ Get memory information
     cat /proc/meminfo
 
 
-### 3. Obtain code samples
+### <a name="git"></a>Obtaining code samples
 
 Clone the course git repo on this server. 
 
@@ -103,7 +114,7 @@ Copy the knapsack source and input files to your working directory
     cp ~/CS3339.git/code_samples/knapsack/knapsack.cpp .
     cp ~/CS3339.git/code_samples/knapsack/input .
 	
-### 4. Build and execute
+### <a name="gcc"></a>Building and executing 
 
 Compile a C++ source. The `-c` option to `gcc` tells it to only compile the source. This option
 doesn't perform any _linking_ and therefore doesn't result in a program that we can execute. 
@@ -138,7 +149,7 @@ location (_path_, in Linux terminology).
 The knapsack program takes a command-line argument which is the name of an input file that holds the
 data. 
     
-### 5. Measure performance 
+### <a name="time"></a>Measuring performance 
 
 **How do we measure the performance of a program?** 
 
@@ -165,7 +176,7 @@ We can check the optimizations that are being applied at `-O3` with the `--help=
     gcc -Q -O3 --help=optimizers
 
 
-### 7. Explore system with a different architecture (POWER8) 
+### <a name="capi"></a>Exploring the system with a different architecture (POWER8) 
 
 Log in to `capi.cs.txstate.edu` using ssh. capi is not visible outside the firewall. Accounts will
 be created for all of you. 
@@ -190,7 +201,7 @@ Build the executable with full optimization and measure its performance.
     time ./knapsack input 
 
 
-### 6. Getting performance insight via `perf`
+### <a name="perf"></a>Getting performance insight via `perf`
 
 Most recent Linux distributions come with a performance evaluation tool called `perf`. This tool
 probes the underlying hardware performance counters and can measure a variety of events
