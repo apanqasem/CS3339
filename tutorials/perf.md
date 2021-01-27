@@ -14,7 +14,7 @@ A simple introduction to command-line program execution and performance evaluati
 * [Obtaining code samples](#git)
 * [Building and executing](#gcc)
 * [Measuring performance](#time)
-* [Exploring a new architecture (POWER8)](#capi) 
+* [Exploring a new architecture: POWER8](#capi) 
 * [Getting performance insight via `perf`](#perf)
 
 
@@ -176,7 +176,7 @@ We can check the optimizations that are being applied at `-O3` with the `--help=
     gcc -Q -O3 --help=optimizers
 
 
-### <a name="capi"></a>Exploring the system with a different architecture (POWER8) 
+### <a name="capi"></a>Exploring a new architecture: POWER8 
 
 Log in to `capi.cs.txstate.edu` using ssh. capi is not visible outside the firewall. Accounts will
 be created for all of you. 
