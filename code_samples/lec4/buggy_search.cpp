@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstdlib>
 #include<vector>
 
 using namespace std;
@@ -30,7 +31,7 @@ int main() {
   }
 
   if (found)
-    cout << "Found " << num_to_search << "at position " << found_index << endl;
+    cout << "Found " << num_to_search << " at position " << found_index << endl;
   else 
     cout << "Didn't find number: " << num_to_search << endl;
 

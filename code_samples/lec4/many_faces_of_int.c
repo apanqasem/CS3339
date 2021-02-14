@@ -6,7 +6,7 @@ int main() {
   /* memory space taken up by different forms of integer data */
   printf("Memory space taken up different integer data types in C++\n\n");
   printf("\tchar = %lu Bytes\n", sizeof(char));
-  printf("\tshort = %lu Byets\n", sizeof(short));
+  printf("\tshort = %lu Bytes\n", sizeof(short));
   printf("\tint = %lu Bytes\n", sizeof(int));
   printf("\tunsigned int = %lu Bytes\n", sizeof(unsigned int));
   printf("\tlong = %lu Bytes\n", sizeof(long));
