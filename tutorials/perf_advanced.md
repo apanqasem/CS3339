@@ -1,6 +1,6 @@
 ## Performance Profiling with `perf`
 
-### 1. Overview 
+### Description 
 
 A  _very_ simple introduction to performance profiling with `perf`. Also, covers the following
 
@@ -9,8 +9,14 @@ A  _very_ simple introduction to performance profiling with `perf`. Also, covers
    * Tools: `hwloc`  
    * Linux utilities: `awk`, `sed`  
 
-   
-### 2. Environment Set-up
+### Outline 
+
+  * [Environment Set-up](#env)
+  * [Performance Measurement](#perf_measure)
+  * [`perf` Basics](#perf)
+  * [Normalized Performance](#norm_perf)
+
+### <a name="env"></a>Environment Set-up
    
 
 ##### (i) Login to remote linux system 
@@ -56,11 +62,11 @@ basic will give a hierarchical map of the compute elements and memory units.
 
 Clone the course git repo on this server. 
 
-	git clone https://git.txstate.edu/aq10/CS7331.git ~/CS7331.git
+	git clone https://git.txstate.edu/aq10/CS3339.git ~/CS3339.git
 
 Copy the matrix-vector multiplication source file (`matvec.c`) to your working directory 
 
-    cp ~/CS7331.git/code_samples/perf/matvec.c .
+    cp ~/CS3339.git/code_samples/matvec.c .
 	
 ##### (iv) Build and execute
 
@@ -72,9 +78,9 @@ Run the executable
 
     ./matvec 2000 200
 
-### 3. Performance Measurement
+### <a name="perf_measure"></a>Performance Measurement
 
-**How do we measure the performance of program?** 
+**How do we measure the performance of a program?** 
 
 We can use the `time` command to get a rough measure of the execution time. The terms _execution
 time_ and _running time_ are synonymous. Runtime means something different! 
@@ -111,8 +117,8 @@ Check out the environment.
 
 Clone the course git repo on this server and copy the matrix-vector multiplication code to the working directory.
 	
-	git clone https://git.txstate.edu/aq10/CS7331 ~/CS7331.git
-    cp ~/CS7331.git/code/matvec.c .
+	git clone https://git.txstate.edu/aq10/CS3339.git ~/CS3339.git
+    cp ~/CS3339.git/code_samples/matvec.c .
 
 Build and run the `matvec` code with the same arguments and record the execution time. 
 
@@ -129,7 +135,7 @@ Build and run the `matvec` code with the same arguments and record the execution
 Minimum execution time does not necessarily imply the best performance! There are many factors to
 consider. 
 
-### 4. `perf` Basics
+### <a name="perf"></a>`perf` Basics
 
 Let's go back to our first machine. 
 
@@ -145,13 +151,6 @@ install it with the following.
 Notice the use of back ticks in the above command. You need the `linux-tools-*` package that matches
 your kernel. 
 
-List available performance events. 
-
-    perf list
-
-The above only lists the _named_ events. Typically there are hundreds more on the system. We will see how
-to access those other events later in the tutorial. 
-
 Get a basic profile of the `ls` command.
 
     perf stat ls
@@ -162,7 +161,56 @@ Get a basic profile of the matrix-vector multiplication code
 
 **Do we have any new insight about the performance of matvec?**
 
-#### Normalized performance
+The set of performance metrics reported with `perf stat` are not the only ones we can get from
+`perf`. The `perf` tool allows us to measure a measure a large number of program _events_. To find
+the list of available performance events we can use the `perf list` command. 
+
+    perf list
+
+    List of pre-defined events (to be used in -e):
+
+    branch-instructions OR branches                    [Hardware event]
+    branch-misses                                      [Hardware event]
+    cache-misses                                       [Hardware event]
+    cache-references                                   [Hardware event]
+    cpu-cycles OR cycles                               [Hardware event]
+    instructions                                       [Hardware event]
+    stalled-cycles-backend OR idle-cycles-backend      [Hardware event]
+    stalled-cycles-frontend OR idle-cycles-frontend    [Hardware event]
+
+    alignment-faults                                   [Software event]
+    bpf-output                                         [Software event]
+    context-switches OR cs                             [Software event]
+    cpu-clock                                          [Software event]
+    cpu-migrations OR migrations                       [Software event]
+    dummy                                              [Software event]
+    emulation-faults                                   [Software event]
+    major-faults                                       [Software event]
+    minor-faults                                       [Software event]
+    page-faults OR faults                              [Software event]
+    task-clock                                         [Software event]
+
+    L1-dcache-load-misses                              [Hardware cache event]
+    L1-dcache-loads                                    [Hardware cache event]
+    L1-dcache-prefetches                               [Hardware cache event]
+    L1-dcache-store-misses                             [Hardware cache event]
+    L1-icache-load-misses                              [Hardware cache event]
+
+    ...
+	...
+	
+The above only lists the _named_ events. Typically there are hundreds more on the system. We will see how
+to access those other events later in the tutorial. 
+
+To get the number of loads and stores that go to the last-level cache (LLC) we can use the following
+command with the `--event` option 
+
+    perf stat --event LLC-loads,LLC-stores ./matvec 2000 200
+
+
+**Do we have any new insight about the performance of matvec?**
+
+### <a name="norm_perf"></a>Normalized performance
 
 Execution time is not always a good measure of performance. Programs that execute more instructions
 or those that process more data will have a longer execution time. That does not necessarily mean
