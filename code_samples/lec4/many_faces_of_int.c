@@ -21,7 +21,7 @@ int main() {
   printf("\tMAX_INT = %d\n", INT_MAX);
   printf("\tMAX_UINT = %u\n", UINT_MAX);
   printf("\tMAX_LONG = %lu\n", LONG_MAX);
-  printf("\tMAX_LONG_LONG = %lld\n\n", LONG_LONG_MAX);
+  printf("\tMAX_LONG_LONG = %lld\n\n", __LONG_LONG_MAX__);
   return 0;
 }
 
