@@ -16,10 +16,8 @@ double dot_prod(double *x, double *y, int n) {
   double res = 0.0;
   int i;
 
-  //#pragma clang loop unroll(disable)
-  //  #pragma clang loop unroll_count(100)
   for (i = 0; i < n; i++) {
-    res += x[i] * y[i]; 
+    res += x[i] * y[i];
   }
   return res;
 }
