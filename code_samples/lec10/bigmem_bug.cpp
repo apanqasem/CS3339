@@ -1,4 +1,4 @@
-const long HUGE = 4000000001;
+long HUGE = 4000000001;
 
 int main() {
   int *my_huge_array = new int[HUGE];
