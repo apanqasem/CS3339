@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
   double sum = 0;
   t0 = mysecond();
   for (j = 0; j < REPS; j++) {
-#pragma omp simd 
+#pragma omp simd
     for (i = 0; i < M; i++)
-	c[i] =  a[i] + b[i];
+      c[i] =  a[i] + b[i];
   }
   t0 = (mysecond() - t0) * 1.e3;
 

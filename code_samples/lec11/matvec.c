@@ -12,12 +12,15 @@ double mysecond() {
   return ( (double) tp.tv_sec + (double) tp.tv_usec * 1.e-6 );
 }
 
+
 double dot_prod(double *x, double *y, int n) {
   double res = 0.0;
   int i;
 
+  //#pragma clang loop unroll(disable)
+  //#pragma clang loop unroll_count(8)
   for (i = 0; i < n; i++) {
-    res += x[i] * y[i];
+   res += x[i] * y[i];
   }
   return res;
 }
