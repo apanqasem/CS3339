@@ -7,8 +7,9 @@ int main(int argc, char* argv[]) {
 
 #pragma omp parallel 
   { 
-    printf("Hello World\n");
-    printf("Goodbye World!\n");
+    int ID = omp_get_thread_num();
+    printf("Hello World from %d\n", ID);
+    printf("Goodbye World from %d!\n", ID);
   }
   return 0;
 }
