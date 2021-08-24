@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
       b[i][j] = i + j;
 
   t0 = mysecond();
+#pragma omp parallel for 
   for (int k = 0; k < REPS; k++) {
     for (int j = 0; j < M; j++) 
       for (int i = 0; i < M; i++)
