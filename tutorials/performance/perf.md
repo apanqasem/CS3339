@@ -1,4 +1,8 @@
 ## Performance Profiling with `perf`
+CS3339, Fall 2021
+
+Apan Qasem [\<apan@txstate.edu\>](apan@txstate.edu)
+
 
 ### Description 
 
@@ -86,11 +90,6 @@ We can use the `time` command to get a rough measure of the execution time. The 
 time_ and _running time_ are synonymous. Runtime means something different! 
 
     time ./matvec 2000 200
-	522738635.7446
-
-    real	0m3.437s
-    user	0m3.421s
-    sys     0m0.016s
 
 The `time` command reports three numbers. `real` time is the time that has elapsed during the
 execution of the program. `user` time is the actual time the program is running on the
@@ -124,11 +123,7 @@ Build and run the `matvec` code with the same arguments and record the execution
 
     g++ -o matvec matvec.c
     time ./matvec 2000 200
-    522738635.7446
 
-    real    0m7.156s
-    user	0m7.152s
-    sys	    0m0.000s
 
 **Which system is doing better? Do the results match your expectation?** 
 
@@ -167,38 +162,6 @@ the list of available performance events we can use the `perf list` command.
 
     perf list
 
-    List of pre-defined events (to be used in -e):
-
-    branch-instructions OR branches                    [Hardware event]
-    branch-misses                                      [Hardware event]
-    cache-misses                                       [Hardware event]
-    cache-references                                   [Hardware event]
-    cpu-cycles OR cycles                               [Hardware event]
-    instructions                                       [Hardware event]
-    stalled-cycles-backend OR idle-cycles-backend      [Hardware event]
-    stalled-cycles-frontend OR idle-cycles-frontend    [Hardware event]
-
-    alignment-faults                                   [Software event]
-    bpf-output                                         [Software event]
-    context-switches OR cs                             [Software event]
-    cpu-clock                                          [Software event]
-    cpu-migrations OR migrations                       [Software event]
-    dummy                                              [Software event]
-    emulation-faults                                   [Software event]
-    major-faults                                       [Software event]
-    minor-faults                                       [Software event]
-    page-faults OR faults                              [Software event]
-    task-clock                                         [Software event]
-
-    L1-dcache-load-misses                              [Hardware cache event]
-    L1-dcache-loads                                    [Hardware cache event]
-    L1-dcache-prefetches                               [Hardware cache event]
-    L1-dcache-store-misses                             [Hardware cache event]
-    L1-icache-load-misses                              [Hardware cache event]
-
-    ...
-	...
-	
 The above only lists the _named_ events. Typically there are hundreds more on the system. We will see how
 to access those other events later in the tutorial. 
 
@@ -230,14 +193,6 @@ operation. This is not a named event. So we will need to dig up the hex-code. Th
 event is `r538010`. We can now count the number of FP operations with perf
 
     perf stat -e r538010 ./matvec 2000 200
-	5.23e+08
-	dot = 3682.44 ms
-
-    Performance counter stats for './matvec 2000 200':
-
-     1,723,530,307      r538010                                                     
-
-       3.779991393 seconds time elapsed
 
 
 `perf` will not give you the FLOPS directly but we can write a short script to calculate it. 
