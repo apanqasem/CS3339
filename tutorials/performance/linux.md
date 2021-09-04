@@ -231,7 +231,7 @@ worse performance than the optimized one.
 
 We can check the optimizations that are being applied at `-O3` with the `--help=optimizers` option. 
 ```
-gcc -Q -O3 --help=optimizers
+g++ -Q -O3 --help=optimizers
 ```
 
 ### <a name="capi"></a>Exploring a new architecture: POWER8 
@@ -262,7 +262,7 @@ Notice how the instructions are different from those on zeus which is an x86 mac
 Build the executable with full optimization and measure its performance. 
 
 ```
-gcc -o knapsack -O3 knapsack.cpp
+g++ -o knapsack -O3 knapsack.cpp
 time ./knapsack input 
 ```
 
