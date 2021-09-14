@@ -1,29 +1,11 @@
 /* 
  * This program illustrates how program data and code is laid out in memory
  * 
- * Edit the program to print out the memory addresses for the following 
- * 
- *  1. Beginning address of global array x
- *  2. Address of second element in global array x 
- *  3. Address of local variable i in main() 
- *  4. Address of local variable y in main() 
- *  5. Beginning address of malloc's array y
- *  6. Address of second element of malloc's array y
- *  7. Address of local variable i in foo()
- *  8. Address of parameter p in foo()
- *  9. Address of bar()  
- * 10. Address of printf()
- *
- * Examine the output and try to answer the following questions 
- * 
- * 1. What is the difference between (1) and (2)? What is the difference between (5) and (6)? 
- *     Are these numbers reasonable? Why?
- * 
- * 2. What is the difference between (1) and (5)? Why?
- * 3. What is the difference between (4) and (5)? Why?
- * 4. What is the difference between (7) and (8)? Why?
- * 5. What is the difference between (3) and (7)? Why?
- */ 
+ * @author: Apan Qasem <apan@txstate.edu>
+ * @date: 09/14/21 
+ */
+
+
 #include<iostream>
 #include<iomanip>
 
@@ -53,7 +35,6 @@ void foo(int p) {
 
 int main() {
   
-
   int i;
   for (i = 0; i < N; i++) {
     x[i] = i;
@@ -69,3 +50,29 @@ int main() {
 
   return 0;
 }
+
+
+/*
+ * Edit the program to print out the memory addresses for the following 
+ * 
+ *  1. Beginning address of global array x [ this is done already ]
+ *  2. Address of second element in global array x 
+ *  3. Address of local variable i in main() 
+ *  4. Address of local variable y in main() 
+ *  5. Beginning address of malloc's array y
+ *  6. Address of second element of malloc's array y
+ *  7. Address of local variable i in foo()
+ *  8. Address of parameter p in foo()
+ *  9. Address of bar()  
+ * 10. Address of cout()
+ *
+ * Examine the output and try to answer the following questions 
+ * 
+ * A. What is the difference between (1) and (2)? What is the difference between (5) and (6)? 
+ *    Are these numbers reasonable? Why?
+ * 
+ * B. What is the difference between (1) and (5)? Why?
+ * C. What is the difference between (4) and (5)? Why?
+ * D. What is the difference between (7) and (8)? Why?
+ * E. What is the difference between (3) and (7)? Why?
+ */ 
