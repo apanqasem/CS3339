@@ -27,7 +27,7 @@ int main() {
 
   /* will search for an integer in the range 0..RAND_RANGE_SEARCH  */
   int num_to_search = rand() % RAND_RANGE_SEARCH;
-
+  cout << "Searching for ... " << num_to_search << endl;
 
   /* linear search in vector of integers */
   bool found = false;
