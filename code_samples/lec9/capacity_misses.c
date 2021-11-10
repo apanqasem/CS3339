@@ -8,7 +8,7 @@
 #include<stdio.h>
 
 /* number of times task is to be repeated */
-#define N 100 
+#define N 100
 
 int main(int argc, char *argv[]) {
   float **a, **b;

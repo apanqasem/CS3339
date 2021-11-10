@@ -8,7 +8,7 @@
 #include<stdio.h>
 
 /* number of times task is to be repeated */
-#define N 100 
+#define N 1000 
 
 int main(int argc, char *argv[]) {
   float **a, **b;
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
       for (i = 0; i < dim; i++)
 	for (jj = j; jj < (j + BLOCK); jj++) 
 	  a[i][jj] = b[i][jj] * scale;
-  
+   
   printf("a[17][17] = %3.2f\n",a[17][17]);
 
   return 0;

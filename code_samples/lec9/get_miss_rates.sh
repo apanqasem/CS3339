@@ -4,7 +4,7 @@
 # @date: 03/31/21
 #
 # Calculate LLC miss rates for a program. Program is expected to a accept a single
-# command-line argument sets its input size. Program is run with input sizes 500 to 4000 in
+# command-line argument which sets its input size. Program is run with input sizes 500 to 4000 in
 # steps of 500. Values are coded. Can be easily modified. 
 #
 

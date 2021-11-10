@@ -18,6 +18,7 @@ int main() {
       a[i][j] = i + 17;
 
 
+  
   return 0;
 
 }
