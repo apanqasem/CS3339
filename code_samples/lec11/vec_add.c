@@ -8,8 +8,6 @@
 #include<stdlib.h>
 #include<sys/time.h>
 
-#include <omp.h>
-
 #define REPS 1000
 
 double t0;
@@ -47,12 +45,9 @@ int main(int argc, char *argv[]) {
     b[i] = i * 3.14; 
   }
 
-  omp_set_num_threads(N);
-
   double sum = 0;
   t0 = mysecond();
   for (j = 0; j < REPS; j++) {
-#pragma omp simd
     for (i = 0; i < M; i++)
       c[i] =  a[i] + b[i];
   }

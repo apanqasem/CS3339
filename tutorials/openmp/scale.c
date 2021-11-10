@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   for (int k = 0; k < REPS; k++) {
     for (int j = 0; j < M; j++) 
       for (int i = 0; i < M; i++)
-	a[i][j] = b[i][j] * 17;
+        a[i][j] = b[i][j] * 17;
   }
 
   t0 = (mysecond() - t0) * 1.e3;
