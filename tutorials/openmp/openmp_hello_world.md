@@ -1,353 +1,283 @@
-# Hello World in OpenMP
+## [Demo] Hello World in OpenMP 
+[D2] Heterogeneous Programming with OpenMP  
+Apan Qasem [\<apan@txstate.edu\>](apan@txstate.edu)
 
 ### Description
 
-A very basic introduction to OpenMP. The demo walks through a Hello World program parallelized with
-the `omp parallel` directive and discusses the importance and significance of thread count
-using a matrix-scalar multiplication example. 
+An in-class interactive walk-through of the Hello World program, parallelized using OpenMP. 
 
-Covers the following directives and API
 
-  * OpenMP directives: `parallel` and `parallel for`
-  * OpenMP API: `omp_set_num_threads()`, `omp_get_thread_num()`
-  
-### Outline
+### Outline 
 
-   * [Installing OpenMP](#install)
-   * [Compiling and Running an OpenMP Program](#compile)
-   * [OpenMP Compiler Directives](#directives)
-   * [OpenMP Runtime API](#api)
-   * [Performance Evaluation](#timing)
-   * [Thread Count ans Scalability](#thread_count)
-   
-### <a name="install"></a> Installing OpenMP
+  * [Setting up OpenMP in Linux](#env)
+  * [Compiling and running an OpenMP program](#compile) (`gcc` command-line)
+  * [OpenMP pragmas:](#pragma)  `parallel`
+  * [OpenMP API:](#api) `omp_set_num_threads(), omp_get_num_threads(), omp_get_thread_num()`
 
-OpenMP does not need to be installed separately. It is packaged with the compiler on your
-system. Check the GCC version to make sure the compiler supports OpenMP 
 
-    (knuth)% gcc --version
-    gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-    Copyright (C) 2017 Free Software Foundation, Inc.
-    This is free software; see the source for copying conditions.  There is NO
-    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+### <a name="env"></a>Setting up OpenMP in Linux
+All mainstream compilers today provide integrated support for OpenMP. Each compiler has its own
+implementation of the OpenMP standard. The OpenMP libraries and header files are packaged and
+distributed with the compiler. So, no software packages need to be installed to build and run OpenMP
+applications as long as there is a more-or-less recent compiler installed on the system. 
 
-OpenMP has been supported since GCC 4.2, which implements OpenMP specification 2.5. To
-ensure support for newer OpenMP specifications we need to have a recent version of GCC
-installed. In particular, we want at least GCC 6 which provides support for OpenMP 4.5
-which added significant enhancements over earlier versions. 
+We can check the version of the compiler in our system as follows (ada is the name of the
+machine where the commands in this demo were run). GCC ... 
 
-### <a name="compile"></a>Compiling and Running an OpenMP Program
+```
+(ada)% gcc --version
+gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
 
-To compile an OpenMP program, all that is needed is to pass the appropriate compiler flag. For GCC
-(and Clang) this flag is `-fopenmp`. Consider the following Hello World C program. 
+... and LLVM 
 
+```
+(ada)% clang --version
+clang version 12.0.0 (https://github.com/llvm/llvm-project.git 041c7b84a4b925476d1e21ed302786033bb6035f) 
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/local/bin
+```
+
+### <a name="compile"></a>Compiling and running an OpenMP program
+
+Below is the canonical Hello World program written in C.
 ```C
 #include<stdio.h>
-
 int main() {
-
-  printf("Hello World\n");
-  printf("Goodbye World!\n");
+  printf("Hello World!\n");
   return 0;
 }
 ```
-The above can be compiled with OpenMP with the following 
 
-    (knuth)% gcc -o hello -fopenmp hello.c
-
-We can run the resulting executable in the same manner as we would a regular sequential program
-
-    (knuth)% ./hello
-
-Of course, we have not added any parallelism in the code yet. So the result is uninteresting. But
-even after adding parallelism, the process of compiling and running OpenMP programs will remain the
-same. 
-
-
-### <a name="directives"></a>OpenMP Compiler Directives
-
-To parallelize with OpenMP we need to add directives or pragmas in the source code. OpenMP supports
-a wide [range of
-pragmas](https://www.openmp.org/wp-content/uploads/OpenMP-4.5-1115-CPP-web.pdf). The most simplest
-of these is the `parallel` pragma. Let us insert the pragma in our Hello World code. 
-
-```C
-#pragma omp parallel {		
-  printf("Hello World!\n");
-  printf("Goodbye World!\n");
-}
-```
-All pragmas in OpenMP begin with `#pragma omp`. This is usually followed by a keyword which
-describes the action to be performed. The action can be followed by a sequence of _clauses_ to
-influence the prescribed action. For now, we will just look at the `parallel` pragma without any
-clauses. A `pragma` is usually followed by a pair curly braces to mark the block of code on which
-the action is to be performed. With the braces, the pragma will apply to the next statement only,
-which is a behavior, we rarely want. 
-
-We can now attempt to compile the OpenMP code using the `fopenmp` flag. 
-
-    (knuth)% gcc -o hello -fopenmp hello0.c 
-    hello0.c: In function ‘main’:
-    hello0.c:7:24: error: expected ‘#pragma omp’ clause before ‘{’ token
-    #pragma omp parallel {
-                        ^
-    hello0.c: At top level:
-    hello0.c:11:3: error: expected identifier or ‘(’ before ‘return’
-    return 0;
-    ^~~~~~
-    hello0.c:12:1: error: expected identifier or ‘(’ before ‘}’ token
-    }
-    ^
-
-
-_What happened?_ 
-
-The compiler error message is a little cryptic. The problem here is that the 
-opening `{` must be on a new line. If you prefer the style where the opening brace is placed on the
-same line as the statement preceding a code block then it may take a little getting used to. The
-above code can be fixed by simply moving the opening braces to the next line. 
-
-```C
-#pragma omp parallel 
-{		
-  printf("Hello World!\n");
-  printf("Goodbye World!\n");
-}
-```
-We can now build the code successfully. 
-
-    (knuth)% gcc -o hello -fopenmp hello.c
-
-_What do we expect the output to be?_
-
-Let's run the program 
-
-    (knuth)% ./hello 
-	
-The behavior may not be exactly what you expected. Here's how the `parallel` directive works. 
-
-  * the pragma marks a _parallel_ region in the program
-  * at runtime OpenMP creates _n_ threads where _n_ is determined from the environment
-  * each thread executes each statement in the block in parallel (i.e., an instance of block is
-    executed _n_ times) 
-
-_Can we find out how many threads OpenMP created for the Hello World program?_
-
-### <a name="api"></a>OpenMP Runtime Library Routines 
-
-We can use `wc` to count the number of lines in the output. 
-
-
-    (knuth)% ./hello | wc -l 
-	24
-
-
-_Why did OpenMP decide to create 12 threads?_ 
-
-Generally, OpenMP will try to match the number threads to the available processing cores. Let's
-check the number of available cores in our system 
-
-    (knuth)% lscpu | head -4
-    Architecture:        x86_64
-    CPU op-mode(s):      32-bit, 64-bit
-    Byte Order:          Little Endian
-    CPU(s):              12
-    
-We can modify this default behavior in several ways. One way to do this is via a call to [OpenMPs
-runtime library](https://gcc.gnu.org/onlinedocs/libgomp/Runtime-Library-Routines.html). OpenMP
-supports a large collection of runtime routines. To use these routines, we need include the OpenMP
-header file. 
+We will implement an OpenMP version of this program. Generally, the first step in writing an OpenMP
+program is including the header file (although in this trivial example we could have done without this)
 
     #include<omp.h>
 
-We can then tell OpenMP to use a specific number of threads using the appropriately named function
-`omp_set_num_threads()` 
+On Linux systems, `omp.h` is located `/usr/include`. Since this is in the compiler's search path for
+header files there is no need to specify an include path (with the `-I` flag) in the compilation
+command. We can compile and create an executable with the following command.  
 
-    omp_set_num_threads(4)
+    (ada)% gcc -o hello -fopenmp hello.c
 
-Each thread created by OpenMP has an ID. This is different from the thread IDs used by the OS. We
-can obtain the thread ID using the `omp_get_thread_num()` function. 
+The only difference from a regular build command is the inclusion of the `-fopenmp` flag. This flag
+tells `gcc` that we are building an OpenMP application. We can now execute this  program from the
+command-line just like a serial program. 
 
-    int ID = omp_get_thread_num();
-    printf("Hello World from %d!\n", ID);
-    printf("Goodbye World from %d!\n", ID);
+    (ada)% ./hello
 
-Let's compile and run the program again. 
+### <a name="pragma"></a>OpenMP pragmas
 
-    (knuth)% gcc -o hello -fopenmp hello1.c 
-    (knuth)% ./hello 
-    Hello World from 2!
-    Goodbye World from 2!
-    Hello World from 0!
-    Goodbye World from 0!
-    Hello World from 1!
-    Goodbye World from 1!
-    Hello World from 3!
-    Goodbye World from 3!
+OpenMP uses a pragma-based syntax. All parallelization and associated directives must be specified
+via pragmas. All pragmas have the following format 
+    
+    #pragma omp <directive> [ options ]
+     
+`#pragma` tells the compiler that this line is to be processed by a pre-processor (not the compiler
+    itself). `omp` says that the directive is to be processed by OpenMP. `<directive>` specifies the
+    action to be taken on the code that immediately follows the pragma. The `<directive>` can be
+    followed by a set of optional arguments. In OpenMP terminology, these arguments are called
+    *clauses* (more on this in the next demo).  
 
-We can see that the output from the different threads is interleaved indicating the concurrency (and
-non-determinism) of execution. 
 
-### <a name="timing"></a>Performance Evaluation
-We can measure the execution time of a parallel OpenMP program just like we would a sequential
-program. Let's time the sequential version first. Instead of hard coding the number of threads, we can
-pass the value to the program as a command-line argument. 
+**The `parallel` pragma:** One of the simplest pragmas in OpenMP is the `parallel` directive. It can
+   be used to parallelize a block of code within an application. We will insert the parallel
+   directive into our Hello World program. 
 
 ```C
 #include<stdio.h>
-#include<stdlib.h>
 #include<omp.h>
-
-int main(int argc, char* argv[]) {
-
-  int num_threads;
-  if (argc <= 1)
-    num_threads = 1;
-  else
-    num_threads = atoi(argv[1]);
-
-  omp_set_num_threads(num_threads);
+int main() {
+  #pragma omp parallel
+  printf("Hello World!\n");
+  return 0;
+}
 ```
 
-Now we can run the sequential version and time it as follows 
+This directive will execute the `printf` statement in parallel. This means that OpenMP will create
+    _n_ threads where each thread will execute an instance of the `printf` statement. All _n_
+    threads will execute this statement in parallel. We can build and execute this code as before.
 
-    (knuth)% time ./hello 1
-    Hello World from 0!
-    Goodbye World from 0!
+_Can we predict the output?_
+	
+```
+(ada)%  gcc -o hello -fopenmp hello.c
+(ada)% ./hello 
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+```
 
-    real	0m0.004s
-    user	0m0.001s
-    sys	    0m0.004s
+_How many threads were created?_
+	
+**Thread count:** We can use the `wc` utility to count the number of lines of output from any program. 
+	
+```
+(ada)%./hello | wc -l 
+12
+```
+	
+OpenMP decided to create 12 threads in this case. 
+	
+_Can we guess why?_ 
+	
+If we do not tell OpenMP how many threads to use, it will apply its own judgment to select the
+number of threads. In many situations, the number of threads will correspond to the number of processing cores  available. We can check the number of cores available on our with `lscpu` command 
+	
+```		
+(ada)% lscpu
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              12
+On-line CPU(s) list: 0-11
+Thread(s) per core:  1
+Core(s) per socket:  6
+Socket(s):           2
+NUMA node(s):        2
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               63
+Model name:          Intel(R) Xeon(R) CPU E5-2609 v3 @ 1.90GHz
+Stepping:            2
+CPU MHz:             1198.677
+```
+	
+**pragma scope** 
 
-`time` does not give us good enough resolution for this tiny program. We can use `perf` to get
-*somewhat* better measurements. 
-
-	(knuth)% perf stat ./hello 1
-    Hello World from 0!
-    Goodbye World from 0!
-
-    Performance counter stats for './hello 1':
-
-          2.240399      task-clock (msec)         #    0.864 CPUs utilized          
-                 0      context-switches          #    0.000 K/sec                  
-                 0      cpu-migrations            #    0.000 K/sec                  
-               118      page-faults               #    0.053 M/sec                  
-         3,788,857      cycles                    #    1.691 GHz                    
-         2,289,566      stalled-cycles-frontend   #   60.43% frontend cycles idle   
-         1,618,024      stalled-cycles-backend    #   42.70% backend cycles idle    
-         3,607,090      instructions              #    0.95  insn per cycle         
-                                                  #    0.63  stalled cycles per insn
-           628,934      branches                  #  280.724 M/sec                  
-            19,700      branch-misses             #    3.13% of all branches        
-
-       0.002592641 seconds time elapsed
-
-Now, let's run the code with 2 threads. 
-
-    (knuth)% perf stat ./hello 2
-    Hello World from 0!
-    Goodbye World from 0!
-    Hello World from 1!
-    Goodbye World from 1!
-
-    Performance counter stats for './hello 2':
-
-          2.384980      task-clock (msec)         #    0.912 CPUs utilized          
-                 1      context-switches          #    0.419 K/sec                  
-                 0      cpu-migrations            #    0.000 K/sec                  
-               121      page-faults               #    0.051 M/sec                  
-         4,249,512      cycles                    #    1.782 GHz                    
-         2,662,123      stalled-cycles-frontend   #   62.65% frontend cycles idle   
-         1,932,917      stalled-cycles-backend    #   45.49% backend cycles idle    
-         3,694,681      instructions              #    0.87  insn per cycle         
-                                                  #    0.72  stalled cycles per insn
-           654,539      branches                  #  274.442 M/sec                  
-            21,580      branch-misses             #    3.30% of all branches        
-
-       0.002616198 seconds time elapsed
-
-
-### <a name="thread_count"></a>Thread Count and Scalability 
-
-_How much performance improvement do we get by running this code in parallel?_
-
-This very simple code is not useful for doing any kind of performance evaluation. Let's look at a code
-that is slightly more complex. 
+By default OpenMP pragmas apply to the next statement only. This is often
+    not very useful for parallelization as we just saw with our first Hello World example. If we
+    want the `pragma` to have an impact on a block of code then we can enclose the region with curly
+    braces `{}` (_almost_ similar to what we do in C/C++)
 
 ```C
-for p(j = 0; j < M; j++)
-  for (i = 0; i < M; i++)
-    b[i][j] = i + j;
-
-t0 = mysecond();
-#pragma omp parallel for
-  for (int k = 0; k < REPS; k++) {
-    for (int j = 0; j < M; j++)
-      for (int i = 0; i < M; i++)
-        a[i][j] = b[i][j] * 17;
+int main() {
+  #pragma omp parallel {
+    printf("Hello World\n");
   }
-
-t0 = (mysecond() - t0) * 1.e3;
-printf("parallel loop = %3.2f ms\n", t0);
-```
-The above program scales the values in an array by a constant factor. The loop is parallelized with the
-`parallel for` directive. This directive is an extension of the `parallel` directive and is applied
-exclusively to the *next* for loop. The `parallel for` directive will equally divide the iterations
-of the loop and run them in parallel. The number of threads to be created is passed via a command-line
-argument. There's a built-in timer to record the execution time of the parallel loop. 
-
-Let's build and execute the sequential version of the code. 
-
-
-```
-(knuth)% g++ -o scale scale.c -fopenmp
-(knuth)% ./scale 1000 1
-result = 578.00
-parallel loop = 1936.35 ms
+  return 0;
+}
 ```
 
-Let's run it with 2 threads. 
-
+The above prompts the compiler to throw the following error. The error message is somewhat cryptic. 
+	
+_Can we figure out why the compiler is complaining?_
+	
+	
 ```
-(knuth)% ./scale 1000 2
-result = 578.00
-parallel loop = 1251.09 ms
-```
-
-Note, even with this very simple code we are not able to double the performance with 2 threads.  Now
-let's run it with 12 threads which is what OpenMP picked for this system. 
-
-```
-(knuth)% ./scale 1000 12
-result = 578.00
-parallel loop = 419.77 ms
-(knuth)% 
-```
-
-_What if we kept on increasing the number of threads, do we expect more parallelism?_
-
-```
-(knuth)% ./scale 1000 32
-result = 578.00
-parallel loop = 373.80 ms
-(knuth)% ./scale 1000 64
-result = 578.00
-parallel loop = 374.94 ms
-(knuth)% ./scale 1000 128
-result = 578.00
-parallel loop = 375.71 ms
+(ada)%  gcc -o hello -fopenmp hello.c
+		hello.c: In function ‘main’:
+		hello.c:6:24: error: expected ‘#pragma omp’ clause before ‘{’ token
+		#pragma omp parallel {
+	                         ^
+	hello.c: At top level:
+	hello.c:9:3: error: expected identifier or ‘(’ before ‘return’
+	return 0;
+	^~~~~~
+	hello.c:10:1: error: expected identifier or ‘(’ before ‘}’ token
+	}
+	^
 ```
 
-_Does this performance pattern reminds us of something?_
+**Compiler quirks:** Unlike C/C++, blocks in OpenMP _must_ start on a newline. Remember, OpenMP
+    directives are being processed by the pre-processor, not the compiler. (Not being able to place
+    the opening brace on the same line is a small sacrifice in style for some of us). We can now add
+    multiple statements inside the block to be parallelized by OpenMP. 
 
-This program becomes compute-bound when the number of threads is substantially higher than the available
-processing cores. The ideal number of threads for a given program depends on many factors. Often some
-fine-tuning is necessary. For instance, let's run the `scale` with 16 threads. 
-
+```C
+int main() {
+  #pragma omp parallel 
+  {
+    printf("Hello World\n");
+    printf("Goodbye World!\n");
+  }
+  return 0;
+}
 ```
-(knuth)% ./scale 1000 16
-result = 578.00
-parallel loop = 416.82 ms
-```
 
-This performance is worse than the performance achieved with 12 threads and 32 threads. 
+Let's compile this version. 
+ 
+    (ada)%  gcc -o hello -fopenmp hello.c
+	(ada)% ./hello 
+	Hello World
+	Hello World
+	Hello World
+	Hello World
+	Goodbye World!
+	Hello World
+	Goodbye World!
+	Hello World
+	...
+
+**`parallel` semantics:**  We observe that Hello and Goodbye statements are not being printed in
+    order. OpenMP has created 12 threads for the block Each threads executes both statements in the
+    block and all threads are running in parallel. The output is dependent on which threads gets
+    control over I/O first and will change from one run to the next. Of course, in real programs, we
+    will want more control over the parallel execution. 
+
+### <a name="api"></a>OpenMP API
+OpenMP provides an extensive API to get information from executing threads and to configure the
+   parallel execution environment. `omp_set_num_threads()` allows us to 
+   tell OpenMP how many threads it should in a parallel block of code. `omp_get_num_threads()` gives
+   us the number of threads that OpenMP is actually using. This function must be called from inside
+   a parallel region. If called from outside it returns 1. Each thread created by OpenMP has a
+   unique ID (this is different from the thread ID maintained by the OS). The thread ID can be
+   retrieved at runtime with `omp_get_thread_num()`. 
+   
+   We will now utilize these functions to track the parallel execution of our Hello World program. 
+
+```C
+#include<stdio.h>
+#include<omp.h>
+	
+int main() {
+	
+  omp_set_num_threads(4);
+  #pragma omp parallel
+  {
+    printf("Hello World from thread %u of %u.\n", omp_get_thread_num(), omp_get_num_threads());
+    printf("Goodbye World from thread %u of %u.\n", omp_get_thread_num(), omp_get_num_threads());
+  }
+  return 0;
+}
+```
+	   
+This program limits the number of OpenMP threads to 4. The parallel segment then prints out the ID
+		of each thread created by OpenMP and the total number of threads. 
+ 	
+	(ada)% gcc -o hello -fopenmp hello.c
+	(ada)% ./hello 
+	Hello World from thread 0 of 4!
+	Goodbye World from thread 0 of 4!
+	Hello World from thread 1 of 4!
+	Goodbye World from thread 1 of 4!
+	Hello World from thread 3 of 4!
+	Goodbye World from thread 3 of 4!
+	Hello World from thread 2 of 4!
+	Goodbye World from thread 2 of 4!
+
+
+The number of threads in `omp_set_num_threads()` does not have to be a compile-time constant. It can be determined at runtime. 
+	
+	
+
+
+
+
+
+
+
+
