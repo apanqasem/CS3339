@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<stdlib.h>  // for atoi 
+#include<stdlib.h>
 #include<omp.h>
 
 int main(int argc, char* argv[]) {
@@ -11,11 +11,11 @@ int main(int argc, char* argv[]) {
     num_threads = atoi(argv[1]);
 
   omp_set_num_threads(num_threads);
-  #pragma omp parallel 
-  {
-    int ID = omp_get_thread_num();
-    printf("Hello World from %d!\n", ID);
-    printf("Goodbye World from %d!\n", ID);
-  }
+#pragma omp parallel
+{
+  int ID = omp_get_thread_num();
+  printf("Hello World from thread %d\n", ID);
+  printf("Goodbye World from thread %d\n", ID);
+}
   return 0;
-}  
+} 
