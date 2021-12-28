@@ -1,2 +1,2 @@
 
-Code samples and demos for CS3339 Spring 2021
+Code samples and demos for CS3339 Spring 2022
