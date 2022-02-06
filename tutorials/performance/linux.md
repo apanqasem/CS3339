@@ -23,6 +23,7 @@ CS3339.
 * [Measuring performance](#time)
 * [Exploring a new architecture: POWER8](#capi) 
 * [Getting performance insight via `perf`](#perf)
+* [Additional resources](#addtl)
 
 
 ### <a name="env"></a>Environment Set-up
@@ -299,3 +300,11 @@ perf stat ./knapsack input
 happening inside the processor. This gives us insight about potential performance bottlenecks. Most
 of the items listed in the `perf` output (e.g., pipeline stalls, mis-predicted branches) are things
 we will talk about later in the semester. 
+
+### <a name="addtl"></a>Additional resources
+
+Bourne Again SHell (BASH) 
+Bash scripting cheatsheet: https://devhints.io/bash 
+Bash guide: http://mywiki.wooledge.org/BashGuide 
+"The ultimate guide to Linux for Windows users": https://www.dedoimedo.com/computers/ultimate-linux-guide-for-windows-users.html 
+A random assortment of shell scripts: https://github.com/chaseleif/shellscripts 
