@@ -304,6 +304,7 @@ we will talk about later in the semester.
 ### <a name="addtl"></a>Additional resources
 
 Bourne Again SHell (BASH) 
+
 Bash scripting cheatsheet: https://devhints.io/bash 
 Bash guide: http://mywiki.wooledge.org/BashGuide 
 "The ultimate guide to Linux for Windows users": https://www.dedoimedo.com/computers/ultimate-linux-guide-for-windows-users.html 
