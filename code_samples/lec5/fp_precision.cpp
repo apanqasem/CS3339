@@ -1,3 +1,16 @@
+/* 
+ * This program illustrates issues associated with floating-point representation
+ * 
+ * @author: Apan Qasem <apan@txstate.edu>
+ * @date: 02/08/22
+ * 
+ * 
+ * 1. Study the code. What is the expected output? 
+ * 2. Compile and run the code. Is the output what you expected? 
+ * 3. Can you identify the bug? (use your knowledge of FP representation from Lec 5)
+ * 4. Fix the bug. 
+ */
+
 #include<iostream>
 
 using namespace std; 
