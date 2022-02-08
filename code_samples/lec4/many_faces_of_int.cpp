@@ -3,14 +3,28 @@
  * the range of values that can be represented in an integer type. 
  *
  * @author: Apan Qasem <apan@txstate.edu>
- * @date: 09/14/21 
+ * @date: 02/08/22 
+* 
+ *
+ *  1. Will this code compile? Which parts of the code seem problematic?
+ *
+ *  2. What does the sizeof() function return? Have you ever had to use it?
+ *
+ *  3. From a programmer's perspective, what is the difference between int and long?
+ *
+ *  4. From a programmer's perspective, what is the difference between long and long long?
+ *
+ *  5. Write down what you expect from each line of output. Then compile and run the code and 
+ *     check if your guesses are corre t.  
+ *
  */
 
 
 #include<iostream>
 #include<limits>
 
-using namespace std; 
+using std::cout;
+using std::endl;
 
 int main() {
 
@@ -32,22 +46,8 @@ int main() {
   cout << "Range of values that can be represented with integer data types" << endl << endl;
   cout << "\tMAX_INT = " << INT_MAX << endl;
   cout << "\tMAX_UINT = " << UINT_MAX << endl;
-  cout << "\tMAX_LONG = " << LONG_MAX << endl;
+   cout << "\tMAX_LONG = " << LONG_MAX << endl;
   cout << "\tMAX_LONG_LONG = " << __LONG_LONG_MAX__ << endl << endl;
   return 0;
 }
-
-/* 
- *
- *  1. Will this code compile? Which parts of the code seem problematic?
- *
- *  2. What does the sizeof() function return? Have you ever had to use it?
- *
- *  3. From a programmer's perspective, what is the difference between int and long?
- *
- *  4. From a programmer's perspective, what is the difference between long and long long?
- *
- *  5. Write down what you expect from each line of output. Then compile and run the code and check if your guess are correct.
- *
- */
 

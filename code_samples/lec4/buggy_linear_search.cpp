@@ -1,14 +1,20 @@
 /* 
- * This program illustrates program bugs integer representation
+ * This program illustrates program bugs in integer representation
  * 
  * @author: Apan Qasem <apan@txstate.edu>
- * @date: 09/20/21 
+ * @date: 02/08/22
+ *
+ * 1. Compile and run the code with a few different values. Do you see the bug?
+ * 2. Study the code and identify the cause for this bug (use your understanding of 
+ *    number representation from Lec 4)
+ * 3. Fix the bug.
  */
 
 #include<iostream>
 #include<vector>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 const int NUMS = 100;
 const int RAND_RANGE_POPULATION = 20;
