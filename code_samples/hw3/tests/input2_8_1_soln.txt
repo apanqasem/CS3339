@@ -1,0 +1,8 @@
+1: MISS
+2: MISS
+2: HIT
+4: MISS
+2: HIT
+5: MISS
+10: MISS
+1: HIT
