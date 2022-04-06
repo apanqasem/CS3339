@@ -18,15 +18,8 @@ double scale(double *x, double *y, int n) {
 
   //#pragma clang loop unroll(disable)
   //  #pragma clang loop unroll_count(100)
-  for (i = 0; i < n; i = i + 2) {
+  for (i = 0; i < n; i++) {
       x[i] = 2.7 * y[i];
-      x[i + 1] = 2.7 * y[i + 1]; 
-      /* x[i + 2] = 4.3 * y[i + 2]; */
-      /* x[i + 3] = 4.3 * y[i + 3]; */
-      /* res += x[i] * y[i]; */
-      /* res += x[i + 1] * y[i + 1]; */
-      /* res += x[i + 2] * y[i + 2]; */
-      /* res += x[i + 3] * y[i + 3]; */
   }
   return x[n - 1];
 }
