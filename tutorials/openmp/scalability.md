@@ -1,4 +1,4 @@
-## [Demo] OpenMP Performance Scalability 
+## OpenMP Performance Scalability 
 [D2] Heterogeneous Programming with OpenMP  
 Apan Qasem [\<apan@txstate.edu\>](apan@txstate.edu)
 
@@ -21,37 +21,11 @@ used as a running example.
 ### <a name="hello"></a>The OpenMP Hello World Program
 
 Below is the Hello World program with OpenMP parallelization that we wrote in our previous tutorial
-([Hello World in OpenMP](demo_hello_world.md)).
-
-```C
-#include<stdio.h>
-#include<stdlib.h>  // for atoi 
-#include<omp.h>
-
-int main(int argc, char* argv[]) {
-
-  int num_threads;
-  if (argc <= 1)
-    num_threads = 1;
-  else
-    num_threads = atoi(argv[1]);
-
-  omp_set_num_threads(num_threads);
-  #pragma omp parallel 
-  {
-    int ID = omp_get_thread_num();
-    printf("Hello World from %d!\n", ID);
-    printf("Goodbye World from %d!\n", ID);
-  }
-  return 0;
-}  
-```
-
-Let's save this file
+([Hello World in OpenMP](demo_hello_world.md)). The code has been updated to read in the desired number threads from a command-line parameter. As noted in the previous tutorial, the `%%writefile hello.c` command will save the  file in the current directory.
 
 
 ```bash
-cat > hello.c << "EOF"
+%%writefile hello.c
 #include<stdio.h>
 #include<stdlib.h>  // for atoi 
 #include<omp.h>
@@ -73,105 +47,38 @@ int main(int argc, char* argv[]) {
   }
   return 0;
 } 
-EOF
 ```
 
-Let us re-run the sequential version and time the run.
+Let us re-run this sequential version and time the run.
 
 
 ```bash
-gcc -o hello -fopenmp hello.c
-time ./hello 1
+!gcc -o hello -fopenmp hello.c
+!time ./hello 1
 ```
 
 The Linux `time` command doesn't really give us satisfactory resolution for measuring the
 performance of this _tiny_ program. We can use
 [`perf`](https://perf.wiki.kernel.org/index.php/Main_Page) to get better measurements.
 
-
-```bash
-perf stat ./hello 1
-```
-
 Now, let's run the code with 2 threads.
 
 
 ```bash
-perf stat ./hello 2
+!time ./hello 2
 ```
 
 _How much performance improvement do we get by running this code in parallel?_
 
-None! This very simple code is not useful for doing any kind of performance analysis. 
+We can't really tell (probably none). This very simple code does not run for a sufficient amount of time for us to do any kind of performance analysis, at least not without tools that give us better timing resolution. 
 
 ### <a name="pragma"></a>Parallelizing with `parallel for`
 
 Let's look at a code that is slightly more complex.
 
-```C
-#include<stdio.h>
-#include<stdlib.h>
-#include<sys/time.h>
-
-#include <omp.h>
-
-#define REPS 100
-
-double t0;
-double mysecond() {
-  struct timeval tp;
-  struct timezone tzp;
-  int i;
-
-  i = gettimeofday(&tp,&tzp);
-  return ( (double) tp.tv_sec + (double) tp.tv_usec * 1.e-6 );
-}
-
-int main(int argc, char *argv[]) {
-  float **a, **b;
-  
-  int M = atoi(argv[1]);
-  int N = atoi(argv[2]);
-
-  omp_set_num_threads(N);
-
-  a = (float **) malloc(sizeof(float *) * M);
-  b = (float **) malloc(sizeof(float *) * M);
-  
-  int i, j, k;
-  for (i = 0; i < M; i++) {
-    a[i] = (float *) malloc(sizeof(float) * M);
-    b[i] = (float *) malloc(sizeof(float) * M);
-  }
-
-  for (j = 0; j < M; j++)
-    for (i = 0; i < M; i++)
-      b[i][j] = i + j;
-
-  t0 = mysecond();
-#pragma omp parallel for 
-  for (int k = 0; k < REPS; k++) {
-    for (int j = 0; j < M; j++) 
-      for (int i = 0; i < M; i++)
-	   a[i][j] = b[i][j] * 17;
-  }
-
-  t0 = (mysecond() - t0) * 1.e3;
-
-  /* print an arbirtrary value from the result array */
-  printf("result = %3.2f\n", a[17][17]);
-  printf("parallel loop = %3.2f ms\n", t0);
-
-  return 0;
-
-}
-```
-
-Lets save this file. 
-
 
 ```bash
-cat > scale.c << "EOF"
+%%writefile scale.c
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/time.h>
@@ -228,7 +135,6 @@ int main(int argc, char *argv[]) {
   return 0;
 
 }
-EOF
 ```
 
 The above program scales the values in an array by a constant factor. The loop is parallelized with the
@@ -245,15 +151,15 @@ Let's build and execute the sequential version of the code.
 
 
 ```bash
-g++ -o scale scale.c -fopenmp
-./scale 1000 1
+!g++ -o scale scale.c -fopenmp
+!./scale 1000 1
 ```
 
 Let's run it with 2 threads.
 
 
 ```bash
-./scale 1000 2
+!./scale 1000 2
 ```
 
 The parallel version runs significantly faster. However note, even with this very simple code we are
@@ -268,14 +174,14 @@ Let's check the number of available cores on this system
 
 
 ```bash
-lscpu | head -6
+!lscpu | head -6
 ```
 
-Now, we will try to maximize the parallelization by running the code with a thread count that matches the number of cores. OpenMP would generally pick this thread count for this system if we did not specify the it ourselves.
+Now, we will try to maximize the parallelization by running the code with a thread count that matches the number of logical cores (hardware threads). OpenMP would generally pick this thread count for this system if we did not specify the it ourselves.
 
 
 ```bash
-./scale 1000 4
+!./scale 1000 4
 ```
 
 _Does it give us more performance?_
@@ -286,9 +192,9 @@ _What if we kept on increasing the number of threads, do we expect to get more p
 
 
 ```bash
-./scale 1000 32
-./scale 1000 64
-./scale 1000 128
+!./scale 1000 32
+!./scale 1000 64
+!./scale 1000 128
 ```
 
 #### Does this performance pattern reminds us of something? 
