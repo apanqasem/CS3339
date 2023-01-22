@@ -144,11 +144,10 @@ Clone the course git repo on this server.
 git clone https://git.txstate.edu/aq10/CS3339.git ~/CS3339.git
 ```
 
-Copy the knapsack source and input files to your working directory 
+Copy the matrix-vector multiplication code (matvec.c) to your working directory 
 
 ```
-cp ~/CS3339.git/code_samples/knapsack/knapsack.cpp .
-cp ~/CS3339.git/code_samples/knapsack/input .
+cp ~/CS3339.git/code_samples/matvec.c .
 ```
 
 ### <a name="gcc"></a>Building and executing 
@@ -156,20 +155,20 @@ cp ~/CS3339.git/code_samples/knapsack/input .
 Compile a C++ source. The `-c` option tells GCC to only _compile_ the source. This option
 doesn't perform any _linking_ and therefore doesn't result in a program that we can execute. 
 ```
-g++ -c knapsack.cpp
+gcc -c matvec.c
 ls -ltr 
 ```
 
 If we want to build the executable then we need to omit the `-c` flag. 
 ```
- g++ -o knapsack knapsack.cpp
+ gcc -o matvec matvec.c
  ls -ltr 
 ```
 
 There are many things happening behind scenes when going from a source to a binary executable. We
 can inspect these steps by using the `-v` option. 
 ```
-g++ -v -o knapsack knapsack.cpp
+gcc -v -o matvec matvec.c
 ```
 
 The compiler's main job is to just generate the human-readable assembly. Subsequent steps are
@@ -177,7 +176,7 @@ conducted by tools (e.g., assembler, linker) that are packaged with the compiler
 generate the assembly code then we can pass the `-S` option. 
 
 ```
-g++ -S knapsack.cpp
+gcc -S matvec.c
 ls -ltr 
 ```
 
@@ -189,11 +188,11 @@ To execute a program from the command-line, we simply need the name of the execu
 location (_path_, in Linux terminology). 
 
 ```
-./knapsack input
+./matvec 10000 5
 ```
 
-The knapsack program takes a command-line argument which is the name of an input file that holds the
-data. 
+The matvec program takes two command-line arguments which correspond to the size of the data set and
+number of times the computation is to be run. 
     
 ### <a name="time"></a>Measuring performance 
 
@@ -203,7 +202,7 @@ We can use the `time` command to get a rough measure of the execution time. The 
 time_ and _running time_ are synonymous. _Runtime_ means something different! 
 
 ```
-time ./knapsack input 
+time ./matvec 10000 5
 ```
 
 The `time` command reports three numbers. `real` time is the time that has elapsed during the
@@ -211,7 +210,7 @@ execution of the program. `user` time is the actual time the program is running 
 processor. `sys` is the time when the _system_ is doing some work either on behalf of this program
 or some program. Often `real` time is roughly equal to `user` time + `sys` time 
 
-**Is the knapsack code performing well?**
+**Is the matvec code performing well?**
 
 The answer is, we don't know! Just like at a single number doesn't tell us much. We need some basis
 for comparison (more on this in the lecture).
@@ -223,16 +222,16 @@ optimizations. This is referred to as level `-O0`. Let's rebuild the program at 
 level `-O3`. 
 
 ```
-g++ -o knapsack -O3 knapsack.cpp
-time ./knapsack input 
+gcc -o matvec -O3 matvec.c
+time ./matvec 10000 5
 ```
 
-Now, we can say that the version of `knapsack` without any optimizations (_-O0_) definitely has
+Now, we can say that the version of `matvec` without any optimizations (_-O0_) definitely has
 worse performance than the optimized one. 
 
 We can check the optimizations that are being applied at `-O3` with the `--help=optimizers` option. 
 ```
-g++ -Q -O3 --help=optimizers
+gcc -Q -O3 --help=optimizers
 ```
 
 ### <a name="capi"></a>Exploring a new architecture: POWER8 
@@ -252,10 +251,10 @@ cat /proc/cpuinfo
 cat /proc/meminfo
 ```
 
-Generate assembly code for knapsack 
+Generate assembly code for matvec
 
 ```
-g++ -S knapsack.cpp
+gcc -S matvec.c
 ```
 
 Notice how the instructions are different from those on zeus which is an x86 machine. 
@@ -263,8 +262,8 @@ Notice how the instructions are different from those on zeus which is an x86 mac
 Build the executable with full optimization and measure its performance. 
 
 ```
-g++ -o knapsack -O3 knapsack.cpp
-time ./knapsack input 
+gcc -o matvec -O3 matvec.c
+time ./matvec 10000 5
 ```
 
 ### <a name="perf"></a>Getting performance insight via `perf`
@@ -289,11 +288,11 @@ want to profile. The program can be one that you wrote or any Linux command.
 perf stat ls
 ```
 
-Now let's profile the knapsack program. Note, for knapsack we need to indicate the path of the
-executable and the input file name after the `stat` command. 
+Now let's profile the matvec program. Note, for `matvec` we need to indicate the path of the
+executable and the command-line arguments the `stat` command. 
 
 ```
-perf stat ./knapsack input
+perf stat ./matvec 10000 5
 ```
 
 `perf` reports not only the execution time, at a better resolution, but also tells us what's
