@@ -20,7 +20,7 @@ const unsigned long PRINT_INTERVAL = 1e+06;   // one million
 
 int main(int argc, char *argv[]) {
 
-  unsigned i = 0; 
+  float i = 0; 
   unsigned j = 0;
   while (i  <= LOOP_BOUND) {
     // print counter value every millionth iteration
