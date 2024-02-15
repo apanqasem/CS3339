@@ -1,7 +1,7 @@
 #include<iostream>
 
 const int DATA_SIZE_A = 1000;
-const int DATA_SIZE_B = 1000000;
+const int DATA_SIZE_B = 100000;
 
 int main() {
 
