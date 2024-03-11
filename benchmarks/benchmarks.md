@@ -34,9 +34,8 @@
 
 ### HPC 
 
-  *[HPCC](https://hpcchallenge.org/hpcc/). Benchmarks used to evaluate HPC systems. Includes DGEMM
-   the key computation for top500
+   * [HPCC](https://hpcchallenge.org/hpcc/). Benchmarks used to evaluate HPC systems. Includes DGEM
+     the key computation for top500 
 
 
-
-### DO NOT USE PassMark 
+### <p style="text-align: center;">DO NOT USE PassMark</p>
