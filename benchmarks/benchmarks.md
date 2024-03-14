@@ -38,4 +38,4 @@
      the key computation for top500 
 
 
-### <p style="text-align: center;">DO NOT USE PassMark</p>
+### <p style="text-align: center;">DO NOT USE PassMark or CineBench</p>
