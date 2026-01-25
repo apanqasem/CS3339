@@ -41,8 +41,7 @@ ssh netid@zeus.cs.txstate.edu
 `zeus` is one of the two _public_ CS servers available for remote access to all CS students. The
 other one is `eros`. Both can be accessed from outside the university firewall. 
 
-The above command will prompt you for the password tied to your netid.  If the userid on your local
-Mac or Linux system is the same as your netid, then you can simply type `ssh
+The above command will prompt you to verify your credentials using one of four MFA methods. If you have not set up MFA with TXST, please do so using the [DUO Enrollment Guideline](https://services.txst.edu/TDClient/39/ITAC/Requests/ServiceDet?ID=371). If the userid on your local Mac or Linux system is the same as your netid, then you can simply type `ssh
 server_name.cs.txstate.edu`.  
 
 The department and the [CRL](compilers.cs.txstate.edu) research group maintains many other servers
