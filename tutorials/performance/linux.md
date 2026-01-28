@@ -140,7 +140,7 @@ cat /proc/meminfo
 Clone the course git repo on this server. 
 
 ```
-git clone https://git.txstate.edu/aq10/CS3339.git ~/CS3339.git
+git clone https://github.com/apanqasem/CS3339.git ~/CS3339.git
 ```
 
 Copy the matrix-vector multiplication code (matvec.c) to your working directory 
