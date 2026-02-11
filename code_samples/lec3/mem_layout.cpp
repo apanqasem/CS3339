@@ -8,6 +8,7 @@
  * Updates 
  *  
  *  @date 02/15/24  modified question list; fixed typos
+ *  @date 02/11/26  minor edits and fixes for in-class exercise
  */
 
 /* Edit the program to print out the memory addresses for the following. 
