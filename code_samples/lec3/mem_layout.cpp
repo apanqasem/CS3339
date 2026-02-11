@@ -10,8 +10,8 @@
  *  @date 02/15/24  modified question list; fixed typos
  */
 
-/* Edit the program to print out the memory addresses for the following (i.e., replace FILL_THIS_IN 
- * in the cout statements with C++ code to print out the appropriate address)
+/* Edit the program to print out the memory addresses for the following. 
+ * Replace each instance of "FILL_THIS_IN" with code to print out the appropriate address
  * 
  *  1. Beginning address of global array x [ this is done already ]
  *  2. Address of second element in global array x 
@@ -49,9 +49,9 @@ void bar(int x) {
 
 void foo(int p) {
   int i;
-  cout << left << setw(WIDTH_COL_ONE) << "7. Local variable i in foo(): "
+  cout << left << setw(WIDTH_COL_ONE) << "(7) Local variable i in foo(): "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
-  cout << left << setw(WIDTH_COL_ONE) << "8. Paramemter p in foo(): "
+  cout << left << setw(WIDTH_COL_ONE) << "(8) Paramemter p in foo(): "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
 
   for (i = 1; i <= N; i++) 
@@ -71,26 +71,26 @@ int main() {
 
   y[17] = 17;
 
-  cout << left << setw(WIDTH_COL_ONE) << "1. Global array x: "
+  cout << left << setw(WIDTH_COL_ONE) << "(1) Global array x: "
        << setw(WIDTH_COL_TWO) << right << (unsigned long) &x << endl;
-  cout << left << setw(WIDTH_COL_ONE) << "2. Second element in global array x: "
+  cout << left << setw(WIDTH_COL_ONE) << "(2) Second element in global array x: "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN  << endl;
     
-  cout << left << setw(WIDTH_COL_ONE) << "3. Local variable i in main(): "
+  cout << left << setw(WIDTH_COL_ONE) << "(3) Local variable i in main(): "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
-  cout << left << setw(WIDTH_COL_ONE) << "4. Local variable y in main(): "
+  cout << left << setw(WIDTH_COL_ONE) << "(4) Local variable y in main(): "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
 
-  cout << left << setw(WIDTH_COL_ONE) << "5. Start address of dynamic array y: "
+  cout << left << setw(WIDTH_COL_ONE) << "(5) Start address of dynamic array y: "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
-  cout << left << setw(WIDTH_COL_ONE) << "6. Second element of dynamic array y: "
+  cout << left << setw(WIDTH_COL_ONE) << "(6) Second element of dynamic array y: "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
   
   foo(y[17]);
 
-  cout << left << setw(WIDTH_COL_ONE) << "9. Address of bar(): "
+  cout << left << setw(WIDTH_COL_ONE) << "(9) Address of bar(): "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
-  cout << left << setw(WIDTH_COL_ONE) << "10. Address of cout: "
+  cout << left << setw(WIDTH_COL_ONE) << "(10) Address of cout: "
        << setw(WIDTH_COL_TWO) << right << FILL_THIS_IN << endl;
 
   return 0;
@@ -100,11 +100,11 @@ int main() {
  *
  * Examine the output and try to answer the following questions 
  * 
- * A. What is the difference between (1) and (2)? What is the difference between (5) and (6)? 
+ * A. What is the difference in the output value between (1) and (2)? What is the difference between (5) and (6)? 
  *    What does this tell us about memory allocation of different data types? [ more on this in next class ]
- * B. What is the difference between (1) and (5)? What does this tell us about where x and y are allocated?
+ * B. What is the difference between (1) and (5)? What does this tell us about x's and y's allocation? 
  * C. What is the difference between (4) and (5)? What does this tell us about the allocation of pointer y and array y? 
- * D. What is the difference between (7) and (8)? What does this tell us about local vairable and parameter allocation? 
+ * D. What is the difference between (7) and (8)? What does this tell us about local variable and parameter allocation? 
  * E. What is the difference between (3) and (7)? What does this tell us about memory allocation for functions?
  */ 
 
